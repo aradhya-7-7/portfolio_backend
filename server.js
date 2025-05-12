@@ -11,13 +11,19 @@ dotenv.config();
 const app = express();
 
 // CORS configuration for production (replace with your actual frontend domain)
-const allowedOrigins = ["https://portfolio-xi-fawn-51.vercel.app/", "http://localhost:5173"];
+const allowedOrigins = [
+  "https://portfolio-xi-fawn-51.vercel.app",
+  "http://localhost:5173" // Optional for local testing
+];
+
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      return callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true
